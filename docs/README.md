@@ -1,0 +1,3 @@
+# Documentation
+
+Competence Project documentation.
