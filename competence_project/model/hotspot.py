@@ -1,9 +1,12 @@
 class Hotspot:
-    def __init__(self, name, geo_position, outdoor=True, description=""):
+    def __init__(self, name, x, y, outdoor=True, description=""):
+        self.id = id(self)
         self.name = name
-        self.geo_position = geo_position
+        self.x = x
+        self.y = y
         self.outdoor = outdoor
         self.description = description
 
     def __str__(self):
-        return self.name + " " + " " + str(self.geo_position) + " " + str(self.outdoor) + " " + self.description
+        return self.name + " " + " " + str(self.x) + " " + str(self.y) + " " + str(
+            self.outdoor) + " " + self.description
