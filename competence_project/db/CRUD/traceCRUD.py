@@ -35,8 +35,11 @@ def select_trace():
         password=credentials[2]
     )
     db_cursor = db.cursor()
-    column = input("Search by userID/hotspotID: ")
-    if column == "userID":
+    column = input("Search by traceID/userID/hotspotID: ")
+    if column == "traceID":
+        select = input("TraceID: ")
+        query = "SELECT * FROM CP_database.traces WHERE id=" + select
+    elif column == "userID":
         select = input("UserID: ")
         query = "SELECT * FROM CP_database.traces WHERE user_id=" + select
     elif column == "hotspotID":
@@ -76,4 +79,30 @@ def delete_trace():
 
 
 def update_trace():
-    return
+    credentials = get_database_credentials()
+    db = mysql.connector.connect(
+        host=credentials[0],
+        user=credentials[1],
+        password=credentials[2]
+    )
+    db_cursor = db.cursor()
+    which = input("Trace ID: ")
+    column = input("Which column should be updated(userID/hotspotID/entryTime/exitTime): ")
+    if column == "userID":
+        user = input("New userID: ")
+        query = "UPDATE CP_database.traces SET user_id = " + user + " WHERE id = " + which
+    elif column == "hotspotID":
+        hotspot = input("New hotspotID: ")
+        query = "UPDATE CP_database.traces SET hotspot_id = '" + hotspot + "' WHERE id = " + which
+    elif column == "entryTime":
+        time = input("Time of entry(YYYY-MM-DD hh:mm:ss): ")
+        query = "UPDATE CP_database.traces SET entry_time = '" + time + "' WHERE id = " + which
+    elif column == "exitTime":
+        time = input("Time of exit(YYYY-MM-DD hh:mm:ss): ")
+        query = "UPDATE CP_database.traces SET exit_time = '" + time + "' WHERE id = " + which
+
+    print(query)
+    db_cursor.execute(query)
+    db.commit()
+    db.close()
+    print(db_cursor.rowcount, "record(s) updated")

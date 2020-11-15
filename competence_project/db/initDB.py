@@ -45,6 +45,7 @@ def create_tables(db_cursor):
      """)
     db_cursor.execute("""
          create table if not exists CP_database.traces (
+             id MEDIUMINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
              user_id MEDIUMINT not null,
              FOREIGN KEY (user_id)
                      REFERENCES persons(id)

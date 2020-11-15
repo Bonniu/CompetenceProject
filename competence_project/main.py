@@ -15,6 +15,7 @@ db_cursor, db = init_database()
 #insert_trace()
 #select_trace()
 #delete_trace()
+#update_trace()
 
 """
 db_cursor.execute("SELECT * FROM CP_database.persons")
