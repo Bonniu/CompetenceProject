@@ -41,6 +41,24 @@ def select_person():
         print(x)
 
 
+def select_all_persons():
+    credentials = get_database_credentials()
+    db = mysql.connector.connect(
+        host=credentials[0],
+        user=credentials[1],
+        password=credentials[2]
+    )
+    db_cursor = db.cursor()
+
+    query = "SELECT * FROM CP_database.persons"
+    print(query)
+    db_cursor.execute(query)
+    result = db_cursor.fetchall()
+    db.close()
+    for x in result:
+        print(x)
+
+
 def delete_person():
     credentials = get_database_credentials()
     db = mysql.connector.connect(
