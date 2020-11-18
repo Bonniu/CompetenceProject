@@ -1,4 +1,4 @@
-class User:
+class Person:
     def __init__(self, phone_number=None, profile="student"):
         self.id = id(self)
         self.phone_number = phone_number

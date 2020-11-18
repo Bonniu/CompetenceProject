@@ -1,6 +1,7 @@
 from math import radians, cos, sin, pi
 
-from plotly.utils import numpy
+import plotly.utils
+import numpy
 from random import choices
 from scipy.stats import expon
 

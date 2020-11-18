@@ -4,7 +4,7 @@ from db.CRUD.traceCRUD import *
 from db.initDB import init_database
 from model.hotspot import Hotspot
 from model.trace import Trace
-from model.user import User
+from model.person import Person
 from service import initialize_hotspots
 
 db_cursor, db = init_database()
