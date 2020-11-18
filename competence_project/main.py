@@ -5,8 +5,11 @@ from db.initDB import init_database
 from model.hotspot import Hotspot
 from model.trace import Trace
 from model.user import User
+from service import initialize_hotspots
 
 db_cursor, db = init_database()
+initialize_hotspots(100)
+'''
 # insert_person(db, db_cursor)
 # select_person(db_cursor)
 select_all_persons(db_cursor)
@@ -26,3 +29,6 @@ select_all_traces(db_cursor)
 print(Hotspot("hotspot_1", 1.232, 11.22))
 print(User())
 print(Trace("user_id", Hotspot("hotspot_1", 22.232, 11.22), 123, 123))
+'''
+
+
