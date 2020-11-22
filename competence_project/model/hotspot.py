@@ -12,7 +12,7 @@ class Hotspot:
         self.x = x
         self.y = y
         self.outdoor = outdoor
-        self.description = random.choices(HOTSPOT_DESCRIPTIONS, weights)[0]
+        self.description = str(random.choices(HOTSPOT_DESCRIPTIONS, weights, k=1))
         self.name = self.description + "_" + str(datetime.now().microsecond)
 
     def __str__(self):

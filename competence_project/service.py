@@ -1,4 +1,4 @@
-from math import radians, cos, sin, pi
+from math import radians, cos, sin, pi, sqrt
 
 #import plotly.utils
 import numpy
@@ -67,3 +67,14 @@ def initialize_users(number_of_users):
     except Exception as exc:
         print(exc)
         return False
+
+def choose_next_hospot(user, hotspots):
+    current = user.current_hotspot
+    distances = []
+    for hotspot in hotspots:
+        distance = sqrt((hotspot.x - current.x)**2 + (hotspot.y - current.y)**2)
+        distances.append(distance)
+
+    distances.sort()
+    chance_multiplier = numpy.random.exponential(scale = 0.05, size = len(distances)).sort()
+
