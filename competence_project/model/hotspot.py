@@ -1,8 +1,9 @@
 from datetime import datetime
-from random import choices
+import random
 
-HOTSPOT_DESCRIPTIONS = ["cafe", "bowlingPlace", "restaurant", "shop", "park", "library"]
-weights = [0.35, 0.05, 0.2, 0.3, 0.08, 0.02]
+HOTSPOT_DESCRIPTIONS = ["cafe", "bowlingPlace", "restaurant", "shop", "park", "library", "cafeteria", "parking lot", "university",
+                        "football stadium", "cinema"]
+weights = [2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2]
 
 
 class Hotspot:
@@ -11,7 +12,7 @@ class Hotspot:
         self.x = x
         self.y = y
         self.outdoor = outdoor
-        self.description = choices(HOTSPOT_DESCRIPTIONS, weights)[0]
+        self.description = random.choices(HOTSPOT_DESCRIPTIONS, weights)[0]
         self.name = self.description + "_" + str(datetime.now().microsecond)
 
     def __str__(self):

@@ -1,11 +1,12 @@
 from math import radians, cos, sin, pi
 
-import plotly.utils
+#import plotly.utils
 import numpy
 from random import choices
 from scipy.stats import expon
 
-from model.hotspot import Hotspot
+from competence_project.model.hotspot import Hotspot
+from competence_project.model.person import Person
 
 CITY_CENTRE_X = 51.759046
 CITY_CENTRE_Y = 19.458062
@@ -39,3 +40,14 @@ def initialize_hotspots(number_of_hotspots):
 def new_coordinates(x0, y0, d, theta):
     theta_rad = pi/2 - radians(theta)
     return x0 + d*cos(theta_rad), y0 + d*sin(theta_rad)
+
+
+def initialize_users(number_of_users):
+    try:
+        users = []
+        for x in range(number_of_users):
+            users.append(Person())
+
+    except Exception as exc:
+        print(exc)
+        return False
