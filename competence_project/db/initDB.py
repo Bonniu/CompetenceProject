@@ -1,7 +1,7 @@
 import mysql.connector
 
-from competence_project.db_new.databaseCredentials import get_database_credentials
-from competence_project.db_new.insertData import insert_persons, insert_hotspots, insert_traces
+from db.databaseCredentials import get_database_credentials
+from db.insertData import insert_persons, insert_hotspots, insert_traces
 
 
 def init_database():

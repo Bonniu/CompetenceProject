@@ -1,11 +1,14 @@
 import mysql.connector
 
-from competence_project.db_new.databaseCredentials import get_database_credentials
+from db.databaseCredentials import get_database_credentials
 
 
-def insert_person():
-    phone = input("Phone number: ")
-    profile = input("Profile: ")
+def insert_hotspot():
+    name = input("Name: ")
+    description = input("Description: ")
+    x = input("X: ")
+    y = input("Y: ")
+    typeOfHotspot = input("Type of hotspot: ")
 
     credentials = get_database_credentials()
     db = mysql.connector.connect(
@@ -15,14 +18,14 @@ def insert_person():
     )
     db_cursor = db.cursor()
 
-    query = "INSERT INTO CP_database.persons (phone_number, profile) VALUES (%s, %s)"
+    query = "INSERT INTO CP_database.hotspots (name, description, x, y, type) VALUES (%s, %s, %s, %s, %s)"
     print(query)
-    db_cursor.execute(query, (phone, profile))
+    db_cursor.execute(query, (name, description, x, y, typeOfHotspot))
     db.commit()
     db.close()
 
 
-def select_person():
+def select_hotpost():
     credentials = get_database_credentials()
     db = mysql.connector.connect(
         host=credentials[0],
@@ -32,7 +35,7 @@ def select_person():
     db_cursor = db.cursor()
 
     select = input("ID: ")
-    query = "SELECT * FROM CP_database.persons WHERE id="+select
+    query = "SELECT * FROM CP_database.hotspots WHERE id=" + select
     print(query)
     db_cursor.execute(query)
     result = db_cursor.fetchall()
@@ -41,7 +44,7 @@ def select_person():
         print(x)
 
 
-def select_all_persons():
+def select_all_hotposts():
     credentials = get_database_credentials()
     db = mysql.connector.connect(
         host=credentials[0],
@@ -50,7 +53,7 @@ def select_all_persons():
     )
     db_cursor = db.cursor()
 
-    query = "SELECT * FROM CP_database.persons"
+    query = "SELECT * FROM CP_database.hotspots"
     print(query)
     db_cursor.execute(query)
     result = db_cursor.fetchall()
@@ -59,7 +62,7 @@ def select_all_persons():
         print(x)
 
 
-def delete_person():
+def delete_hotspot():
     credentials = get_database_credentials()
     db = mysql.connector.connect(
         host=credentials[0],
@@ -69,7 +72,7 @@ def delete_person():
     db_cursor = db.cursor()
 
     delete = input("ID: ")
-    query = "DELETE FROM CP_database.persons WHERE id="+delete
+    query = "DELETE FROM CP_database.hotspots WHERE id=" + delete
     print(query)
     db_cursor.execute(query)
     db.commit()
@@ -77,7 +80,7 @@ def delete_person():
     print(db_cursor.rowcount, "record(s) deleted")
 
 
-def update_person():
+def update_hotspot():
     credentials = get_database_credentials()
     db = mysql.connector.connect(
         host=credentials[0],
@@ -85,14 +88,23 @@ def update_person():
         password=credentials[2]
     )
     db_cursor = db.cursor()
-    which = input("Person ID: ")
-    column = input("Which column should be updated(phone/profile): ")
-    if column == "phone":
-        phone = input("New Phone Number: ")
-        query = "UPDATE CP_database.persons SET phone_number = " + phone + " WHERE id = " + which
-    elif column == "profile":
-        person = input("New profile: ")
-        query = "UPDATE CP_database.persons SET profile = '" + person + "' WHERE id = " + which
+    which = input("Hotspot ID: ")
+    column = input("Which column should be updated(name/description/x/y/type): ")
+    if column == "name":
+        name = input("New hotspot name: ")
+        query = "UPDATE CP_database.hotspots SET name = " + name + " WHERE id = " + which
+    elif column == "description":
+        description = input("New description: ")
+        query = "UPDATE CP_database.hotspots SET profile = '" + description + "' WHERE id = " + which
+    elif column == "x":
+        x = input("New x coord: ")
+        query = "UPDATE CP_database.hotspots SET x = '" + x + "' WHERE id = " + which
+    elif column == "y":
+        y = input("New y coord: ")
+        query = "UPDATE CP_database.hotspots SET y = '" + y + "' WHERE id = " + which
+    elif column == "type":
+        type = input("New type: ")
+        query = "UPDATE CP_database.hotspots SET type = '" + type + "' WHERE id = " + which
 
     print(query)
     db_cursor.execute(query)

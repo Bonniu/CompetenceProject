@@ -5,8 +5,8 @@ import numpy
 from random import choices
 from scipy.stats import expon
 
-from competence_project.model.hotspot import Hotspot
-from competence_project.model.person import Person
+from model.hotspot import Hotspot
+from model.person import Person
 
 CITY_CENTRE_X = 51.759046
 CITY_CENTRE_Y = 19.458062

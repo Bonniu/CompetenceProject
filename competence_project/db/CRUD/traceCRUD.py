@@ -2,7 +2,7 @@ import datetime
 
 import mysql.connector
 
-from competence_project.db_new.databaseCredentials import get_database_credentials
+from db.databaseCredentials import get_database_credentials
 
 
 def insert_trace():

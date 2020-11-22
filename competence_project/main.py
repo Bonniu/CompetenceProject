@@ -1,12 +1,12 @@
-from competence_project.db_new.CRUD.hotspotCRUD import *
-from competence_project.db_new.CRUD.personCRUD import *
-from competence_project.db_new.CRUD.traceCRUD import *
-from competence_project.db_new.initDB import init_database
-from competence_project.model.hotspot import Hotspot
-from competence_project.model.trace import Trace
-from competence_project.model.person import Person
-from competence_project.service import initialize_hotspots
-from competence_project.service import initialize_users
+from db.CRUD.hotspotCRUD import *
+from db.CRUD.personCRUD import *
+from db.CRUD.traceCRUD import *
+from db.initDB import init_database
+from model.hotspot import Hotspot
+from model.trace import Trace
+from model.person import Person
+from service import initialize_hotspots
+from service import initialize_users
 
 db_cursor, db = init_database()
 initialize_hotspots(100)
