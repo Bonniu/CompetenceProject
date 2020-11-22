@@ -25,12 +25,15 @@ def initialize_hotspots(number_of_hotspots):
             if dist > MIN_DISTANCE and dist < MAX_DISTANCE:
                 angle = angles[numb]
                 new_coordination = new_coordinates(CITY_CENTRE_X, CITY_CENTRE_Y, dist, angle)
-                new_hotspots.append(Hotspot("nazwa", new_coordination[0], new_coordination[1]))
+                new_hotspots.append(Hotspot(new_coordination[0], new_coordination[1], "nazwa"))
                 new_hotspots_number += 1
+
+        x=[o.x for o in new_hotspots]
+        y=[o.y for o in new_hotspots]
 
         # TODO funkcja dodajaca do bazy danych liste obiektow
         #db_function_to_add_hotspots_list_to_mysql(new_hotspots)
-        return True
+        return x,y
 
     except Exception as exc:
         print(exc)
@@ -44,9 +47,22 @@ def new_coordinates(x0, y0, d, theta):
 
 def initialize_users(number_of_users):
     try:
-        users = []
-        for x in range(number_of_users):
-            users.append(Person())
+        new_users = []
+        angles = numpy.random.uniform(low=0.0, high=360.0, size = 2*number_of_users)
+        new_users_number = 0
+        for numb, dist in enumerate(numpy.random.exponential(scale=0.1, size = 2*number_of_users), start=0):
+            if new_users_number > number_of_users-1:
+                break
+            if dist > MIN_DISTANCE and dist < MAX_DISTANCE:
+                angle = angles[numb]
+                new_coordination = new_coordinates(CITY_CENTRE_X, CITY_CENTRE_Y, dist, angle)
+                new_users.append(Person(x=new_coordination[0], y=new_coordination[1]))
+                new_users_number += 1
+
+        x=[o.x for o in new_users]
+        y=[o.y for o in new_users]
+        
+        return x,y
 
     except Exception as exc:
         print(exc)

@@ -8,9 +8,16 @@ from model.person import Person
 from service import initialize_hotspots
 from service import initialize_users
 
+import matplotlib.pyplot as plt
+
 db_cursor, db = init_database()
-initialize_hotspots(100)
-initialize_users(50)
+x1,y1=initialize_hotspots(150)
+x2,y2=initialize_users(50)
+
+# plt.scatter(x1,y1, c='coral')
+# plt.scatter(x2,y2, c='lightblue')
+# plt.show()
+
 '''
 # insert_person(db, db_cursor)
 # select_person(db_cursor)
