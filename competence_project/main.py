@@ -7,12 +7,14 @@ from model.trace import Trace
 from model.person import Person
 from service import initialize_hotspots
 from service import initialize_users
+from service import choose_next_hospot
 
 import matplotlib.pyplot as plt
 
 db_cursor, db = init_database()
-x1,y1=initialize_hotspots(150)
-x2,y2=initialize_users(50)
+hotspots=initialize_hotspots(150)
+users=initialize_users(50)
+choose_next_hospot(users[0], hotspots)
 
 # plt.scatter(x1,y1, c='coral')
 # plt.scatter(x2,y2, c='lightblue')
