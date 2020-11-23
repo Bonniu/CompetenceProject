@@ -70,30 +70,23 @@ def initialize_users(number_of_users):
         return False
 
 def choose_next_hospot(user, hotspots):
-    #current = user.current_hotspot
     try:
-
-        distances = []
         hotspot_dict = {}
         for hotspot in hotspots:
             distance = sqrt((hotspot.x - user.x)**2 + (hotspot.y - user.y)**2)
             hotspot_dict[hotspot] = distance
-            #distances.append(hotspot_dict)
-            #hotspot_dict = {}
 
         sorted_hotspots = sorted(hotspot_dict.items(), key=lambda x: x[1])
-
         chance_multiplier = sorted(numpy.random.exponential(scale = 5, size = len(list(sorted_hotspots))))
         chance_multiplier = [int(x) for x in chance_multiplier]
         hotspots_with_chances = {}
         for i, tup in enumerate(sorted_hotspots, start=1):
             hotspots_with_chances[tup[0]] = chance_multiplier[-i]
-            return_multiplier(user, hotspot)
-            #random.choices(sorted_hotspots.keys, )
+            hotspots_with_chances[tup[0]] *= return_multiplier(user, tup[0])
+            hotspots_with_chances[tup[0]] = int(hotspots_with_chances[tup[0]]*100)
 
-
-
-        return True
+        print(hotspots_with_chances)
+        return random.choices(list(hotspots_with_chances.keys()), list(hotspots_with_chances.values()), k=1)
     except Exception as exc:
         print(exc)
 
@@ -118,8 +111,7 @@ def return_multiplier(user, hotspot):
         if key == hotspot.description:
             for e in val:
                 if user.interests[0] == e[0]:
-                    print(e[1])
-                    #return e[1]
+                    return e[1]
 
 
 
