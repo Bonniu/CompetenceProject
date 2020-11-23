@@ -4,6 +4,8 @@ USER_PROFILES = ["student", "cook", "seller", "athlete", "retired"]
 USER_INTERESTS = ["football", "cinemagoer", "sport", "bowling", "shopping", "books"]
 PROFILES_CHOICE_WEIGHTS = [3, 1, 1, 3, 2]
 INTERESTS_CHOICE_WEIGHTS = [1, 1, 2, 2, 2, 2]
+
+
 class Person:
     def __init__(self, x,y, phone_number=None):
         self.id = id(self)

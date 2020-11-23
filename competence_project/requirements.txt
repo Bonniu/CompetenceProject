@@ -1,3 +1,14 @@
 mysql-connector-python==8.0.22
 numpy==1.19.4
 scipy==1.5.4
+
+pip~=9.0.1
+wheel~=0.30.0
+geopy~=2.0.0
+requests~=2.18.4
+geographiclib~=1.50
+pytz~=2018.3
+six~=1.15.0
+protobuf~=3.14.0
+setuptools~=39.0.1
+matplotlib~=2.1.1

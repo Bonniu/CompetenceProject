@@ -1,18 +1,24 @@
-from math import radians, cos, sin, pi, sqrt
+import datetime
+from math import radians, cos, sin, pi, sqrt, atan2
 
 #import plotly.utils
 import numpy
 import random
+import time
 from random import choices
 from scipy.stats import expon
 
 from model.hotspot import Hotspot
 from model.person import Person
+from model.trace import Trace
 
 CITY_CENTRE_X = 51.759046
 CITY_CENTRE_Y = 19.458062
 MIN_DISTANCE = 0.0005
 MAX_DISTANCE = 0.08
+
+START_DATE = datetime.datetime.strptime('2020-10-20', '%Y-%m-%d')
+END_DATE = datetime.datetime.strptime('2020-12-20', '%Y-%m-%d')
 
 
 def initialize_hotspots(number_of_hotspots):
@@ -69,11 +75,18 @@ def initialize_users(number_of_users):
         print(exc)
         return False
 
-def choose_next_hospot(user, hotspots):
+def choose_next_hotspot(user, hotspots, previous_location):
     try:
+        if isinstance(previous_location, Hotspot):
+            previous_x = previous_location.x
+            previous_y = previous_location.y
+        else:
+            previous_x = user.x
+            previous_y = user.y
+
         hotspot_dict = {}
         for hotspot in hotspots:
-            distance = sqrt((hotspot.x - user.x)**2 + (hotspot.y - user.y)**2)
+            distance = sqrt((hotspot.x - previous_x)**2 + (hotspot.y - previous_y)**2)
             hotspot_dict[hotspot] = distance
 
         sorted_hotspots = sorted(hotspot_dict.items(), key=lambda x: x[1])
@@ -86,7 +99,7 @@ def choose_next_hospot(user, hotspots):
             hotspots_with_chances[tup[0]] = int(hotspots_with_chances[tup[0]]*100)
 
         print(hotspots_with_chances)
-        return random.choices(list(hotspots_with_chances.keys()), list(hotspots_with_chances.values()), k=1)
+        return random.choices(list(hotspots_with_chances.keys()), list(hotspots_with_chances.values()), k=1)[0]
     except Exception as exc:
         print(exc)
 
@@ -115,3 +128,101 @@ def return_multiplier(user, hotspot):
 
 
 
+def generate_route_for_user(hotspots, user):
+    try:
+        visited_hotspots = []
+        today_traces = []
+        all_traces_for_user = []
+
+        current_date = START_DATE
+
+        while current_date < END_DATE:
+            start_time = generate_start_time(current_date)
+            next_hotspot = choose_next_hotspot(user, hotspots, None)
+            trace_walking_time = needed_time(distance_between_two_points(user, next_hotspot))
+            arriving_time = start_time + datetime.timedelta(seconds=trace_walking_time*60)
+            exit_time = arriving_time + datetime.timedelta(seconds = visiting_time()*60)
+            new_trace = Trace(user.id, next_hotspot.id, arriving_time, exit_time)
+            today_traces.append(new_trace)
+            all_traces_for_user.append(new_trace)
+            visited_hotspots.append(next_hotspot.id)
+
+            max_activity_time = current_date.replace(minute=0, hour=23)
+            while exit_time < max_activity_time:
+                previous_trace = today_traces[-1]
+                previous_hotspot = next((x for x in hotspots if x.id == today_traces[-1].hotspot_id), None)
+                start_time = previous_trace.exit_time
+                next_hotspot = choose_next_hotspot(user, hotspots, previous_hotspot)
+                while next_hotspot.id in visited_hotspots:
+                    next_hotspot = choose_next_hotspot(user, hotspots, previous_hotspot)
+                trace_walking_time = needed_time(distance_between_two_points(previous_hotspot, next_hotspot))
+                arriving_time = start_time + datetime.timedelta(seconds=trace_walking_time*60)
+                exit_time = arriving_time + datetime.timedelta(seconds=visiting_time() * 60)
+                new_trace = Trace(user.id, next_hotspot.id, arriving_time, exit_time)
+                today_traces.append(new_trace)
+                all_traces_for_user.append(new_trace)
+                visited_hotspots.append(next_hotspot.id)
+
+            visited_hotspots = []
+            today_traces = []
+            current_date = current_date + datetime.timedelta(days=1)
+        #TODO dodac trasy do bazy
+        return True
+    except Exception as exc:
+        print(exc)
+
+
+def generate_start_time(date):
+    min_hour = 6
+    max_hour = 16
+
+    hour = random.randint(min_hour, max_hour)
+    minute = random.randint(0, 59)
+
+    new_date = date
+    new_date = new_date.replace(minute=minute, hour=hour)
+    return new_date
+
+
+def distance_between_two_points(hotspot1, hotspot2):
+    R = 6373.0
+
+    lat1 = radians(hotspot1.x)
+    lon1 = radians(hotspot1.y)
+    lat2 = radians(hotspot2.x)
+    lon2 = radians(hotspot2.y)
+
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+
+    a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+    distance = R * c
+    return distance
+
+
+def needed_time(distance):
+    min_minute_for_km = 5
+    max_minute_for_km = 15
+
+    walk_time = random.randint(min_minute_for_km, max_minute_for_km)
+    return walk_time*distance
+
+
+#ewentualnie dorzucic rozklad
+def visiting_time():
+    min_visiting_time = 1
+    max_visiting_time = 180
+
+    visit_time = random.randint(min_visiting_time, max_visiting_time)
+    return visit_time
+
+
+def generate_traces_for_users(users, hotspots):
+    try:
+        for user in users:
+            generate_route_for_user(hotspots, user)
+
+    except Exception as exc:
+        print(exc)

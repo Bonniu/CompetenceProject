@@ -5,16 +5,16 @@ from db.initDB import init_database
 from model.hotspot import Hotspot
 from model.trace import Trace
 from model.person import Person
-from service import initialize_hotspots
-from service import initialize_users
-from service import choose_next_hospot
+from service import initialize_hotspots, choose_next_hotspot
+from service import *
+
 
 import matplotlib.pyplot as plt
 
 db_cursor, db = init_database()
 hotspots=initialize_hotspots(150)
 users=initialize_users(50)
-choose_next_hospot(users[0], hotspots)
+generate_traces_for_users(users,hotspots)
 
 # plt.scatter(x1,y1, c='coral')
 # plt.scatter(x2,y2, c='lightblue')
