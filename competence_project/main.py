@@ -1,20 +1,11 @@
-from db.CRUD.hotspotCRUD import *
-from db.CRUD.personCRUD import *
-from db.CRUD.traceCRUD import *
 from db.initDB import init_database
-from model.hotspot import Hotspot
-from model.trace import Trace
-from model.person import Person
-from service import initialize_hotspots, choose_next_hotspot
 from service import *
-
-
-import matplotlib.pyplot as plt
+from service import initialize_hotspots
 
 db_cursor, db = init_database()
-hotspots=initialize_hotspots(150)
-users=initialize_users(50)
-generate_traces_for_users(users,hotspots)
+hotspots = initialize_hotspots(150)
+users = initialize_users(50)
+generate_traces_for_users(users, hotspots)
 
 # plt.scatter(x1,y1, c='coral')
 # plt.scatter(x2,y2, c='lightblue')
@@ -41,5 +32,3 @@ print(Hotspot("hotspot_1", 1.232, 11.22))
 print(User())
 print(Trace("user_id", Hotspot("hotspot_1", 22.232, 11.22), 123, 123))
 '''
-
-

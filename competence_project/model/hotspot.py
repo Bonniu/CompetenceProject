@@ -1,5 +1,5 @@
-from datetime import datetime
 import random
+from datetime import datetime
 
 HOTSPOT_DESCRIPTIONS = ["cafe", "bowlingPlace", "restaurant", "shop", "park", "library", "parking", "university",
                         "stadium", "cinema"]
@@ -18,5 +18,3 @@ class Hotspot:
     def __str__(self):
         return self.name + " " + " " + str(self.x) + " " + str(self.y) + " " + str(
             self.outdoor) + " " + self.description
-
-

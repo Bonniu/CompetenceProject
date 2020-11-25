@@ -1,6 +1,3 @@
-
-
-
 class Trace:
     def __init__(self, user_id, hotspot_id, entry_time, exit_time):
         self.user_id = user_id

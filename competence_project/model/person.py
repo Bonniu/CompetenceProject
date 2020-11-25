@@ -7,7 +7,7 @@ INTERESTS_CHOICE_WEIGHTS = [1, 1, 2, 2, 2, 2]
 
 
 class Person:
-    def __init__(self, x,y, phone_number=None):
+    def __init__(self, x, y, phone_number=None):
         self.id = id(self)
         self.phone_number = phone_number
         self.profile = random.choices(USER_PROFILES, PROFILES_CHOICE_WEIGHTS, k=1)
@@ -16,7 +16,6 @@ class Person:
         self.route = []
         self.x = x
         self.y = y
-
 
     def __str__(self):
         return str(self.id) + " " + str(self.phone_number) + " " + self.profile

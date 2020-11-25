@@ -8,7 +8,7 @@ def insert_hotspot():
     description = input("Description: ")
     x = input("X: ")
     y = input("Y: ")
-    typeOfHotspot = input("Type of hotspot: ")
+    type_of_hotspot = input("Type of hotspot: ")
 
     credentials = get_database_credentials()
     db = mysql.connector.connect(
@@ -20,7 +20,7 @@ def insert_hotspot():
 
     query = "INSERT INTO CP_database.hotspots (name, description, x, y, type) VALUES (%s, %s, %s, %s, %s)"
     print(query)
-    db_cursor.execute(query, (name, description, x, y, typeOfHotspot))
+    db_cursor.execute(query, (name, description, x, y, type_of_hotspot))
     db.commit()
     db.close()
 
