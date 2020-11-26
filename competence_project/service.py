@@ -13,6 +13,7 @@ CITY_CENTRE_X = 51.759046
 CITY_CENTRE_Y = 19.458062
 MIN_DISTANCE = 0.0005
 MAX_DISTANCE = 0.08
+R = 6373.0
 
 START_DATE = datetime.datetime.strptime('2020-10-20', '%Y-%m-%d')
 END_DATE = datetime.datetime.strptime('2020-12-20', '%Y-%m-%d')
@@ -29,7 +30,7 @@ def initialize_hotspots(number_of_hotspots):
             if MIN_DISTANCE < dist < MAX_DISTANCE:
                 angle = angles[numb]
                 new_coordination = new_coordinates(CITY_CENTRE_X, CITY_CENTRE_Y, dist, angle)
-                new_hotspots.append(Hotspot(new_coordination[0], new_coordination[1], "nazwa"))
+                new_hotspots.append(Hotspot(float(new_coordination[0]), float(new_coordination[1])))
                 new_hotspots_number += 1
 
         x = [o.x for o in new_hotspots]
@@ -49,38 +50,39 @@ def new_coordinates(x0, y0, d, theta):
     return x0 + d * cos(theta_rad), y0 + d * sin(theta_rad)
 
 
-def initialize_users(number_of_users):
+def initialize_persons(number_of_persons):
     try:
-        new_users = []
-        angles = numpy.random.uniform(low=0.0, high=360.0, size=2 * number_of_users)
-        new_users_number = 0
-        for numb, dist in enumerate(numpy.random.exponential(scale=0.1, size=2 * number_of_users), start=0):
-            if new_users_number > number_of_users - 1:
+        new_persons = []
+        angles = numpy.random.uniform(low=0.0, high=360.0, size=2 * number_of_persons)
+        new_persons_number = 0
+        for numb, dist in enumerate(numpy.random.exponential(scale=0.1, size=2 * number_of_persons), start=0):
+            if new_persons_number > number_of_persons - 1:
                 break
             if MIN_DISTANCE < dist < MAX_DISTANCE:
                 angle = angles[numb]
                 new_coordination = new_coordinates(CITY_CENTRE_X, CITY_CENTRE_Y, dist, angle)
-                new_users.append(Person(x=new_coordination[0], y=new_coordination[1]))
-                new_users_number += 1
+                random_phone_number = random.randint(100000000, 999999999)
+                new_persons.append(Person(new_coordination[0], new_coordination[1], random_phone_number))
+                new_persons_number += 1
 
-        x = [o.x for o in new_users]
-        y = [o.y for o in new_users]
+        x = [o.x for o in new_persons]
+        y = [o.y for o in new_persons]
 
-        return new_users
+        return new_persons
 
     except Exception as exc:
         print(exc)
         return False
 
 
-def choose_next_hotspot(user, hotspots, previous_location):
+def choose_next_hotspot(person, hotspots, previous_location):
     try:
         if isinstance(previous_location, Hotspot):
             previous_x = previous_location.x
             previous_y = previous_location.y
         else:
-            previous_x = user.x
-            previous_y = user.y
+            previous_x = person.x
+            previous_y = person.y
 
         hotspot_dict = {}
         for hotspot in hotspots:
@@ -93,7 +95,7 @@ def choose_next_hotspot(user, hotspots, previous_location):
         hotspots_with_chances = {}
         for i, tup in enumerate(sorted_hotspots, start=1):
             hotspots_with_chances[tup[0]] = chance_multiplier[-i]
-            hotspots_with_chances[tup[0]] *= return_multiplier(user, tup[0])
+            hotspots_with_chances[tup[0]] *= return_multiplier(person, tup[0])
             hotspots_with_chances[tup[0]] = int(hotspots_with_chances[tup[0]] * 100)
 
         print(hotspots_with_chances)
@@ -104,7 +106,7 @@ def choose_next_hotspot(user, hotspots, previous_location):
         return False
 
 
-def return_multiplier(user, hotspot):
+def return_multiplier(person, hotspot):
     connections = {
         "cafe": [("football", 1), ("cinemagoer", 1), ("sport", 1), ("bowling", 1), ("shopping", 1.2), ("books", 1.5)],
         "bowlingPlace": [("football", 1), ("cinemagoer", 0.9), ("sport", 1.1), ("bowling", 2), ("shopping", 1),
@@ -129,27 +131,27 @@ def return_multiplier(user, hotspot):
     for key, val in connections.items():
         if key == hotspot.description:
             for e in val:
-                if user.interests[0] == e[0]:
+                if person.interests == e[0]:
                     return e[1]
 
 
-def generate_route_for_user(hotspots, user):
+def generate_route_for_person(hotspots, person):
     try:
         visited_hotspots = []
         today_traces = []
-        all_traces_for_user = []
+        all_traces_for_person = []
 
         current_date = START_DATE
 
         while current_date < END_DATE:
             start_time = generate_start_time(current_date)
-            next_hotspot = choose_next_hotspot(user, hotspots, None)
-            trace_walking_time = needed_time(distance_between_two_points(user, next_hotspot))
+            next_hotspot = choose_next_hotspot(person, hotspots, None)
+            trace_walking_time = needed_time(distance_between_two_points(person, next_hotspot))
             arriving_time = start_time + datetime.timedelta(seconds=trace_walking_time * 60)
             exit_time = arriving_time + datetime.timedelta(seconds=visiting_time() * 60)
-            new_trace = Trace(user.id, next_hotspot.id, arriving_time, exit_time)
+            new_trace = Trace(person.id, next_hotspot.id, arriving_time, exit_time)
             today_traces.append(new_trace)
-            all_traces_for_user.append(new_trace)
+            all_traces_for_person.append(new_trace)
             visited_hotspots.append(next_hotspot.id)
 
             max_activity_time = current_date.replace(minute=0, hour=23)
@@ -157,15 +159,15 @@ def generate_route_for_user(hotspots, user):
                 previous_trace = today_traces[-1]
                 previous_hotspot = next((x for x in hotspots if x.id == today_traces[-1].hotspot_id), None)
                 start_time = previous_trace.exit_time
-                next_hotspot = choose_next_hotspot(user, hotspots, previous_hotspot)
+                next_hotspot = choose_next_hotspot(person, hotspots, previous_hotspot)
                 while next_hotspot.id in visited_hotspots:
-                    next_hotspot = choose_next_hotspot(user, hotspots, previous_hotspot)
+                    next_hotspot = choose_next_hotspot(person, hotspots, previous_hotspot)
                 trace_walking_time = needed_time(distance_between_two_points(previous_hotspot, next_hotspot))
                 arriving_time = start_time + datetime.timedelta(seconds=trace_walking_time * 60)
                 exit_time = arriving_time + datetime.timedelta(seconds=visiting_time() * 60)
-                new_trace = Trace(user.id, next_hotspot.id, arriving_time, exit_time)
+                new_trace = Trace(person.id, next_hotspot.id, arriving_time, exit_time)
                 today_traces.append(new_trace)
-                all_traces_for_user.append(new_trace)
+                all_traces_for_person.append(new_trace)
                 visited_hotspots.append(next_hotspot.id)
 
             visited_hotspots = []
@@ -190,7 +192,6 @@ def generate_start_time(date):
 
 
 def distance_between_two_points(hotspot1, hotspot2):
-    R = 6373.0
 
     lat1 = radians(hotspot1.x)
     lon1 = radians(hotspot1.y)
@@ -224,10 +225,10 @@ def visiting_time():
     return visit_time
 
 
-def generate_traces_for_users(users, hotspots):
+def generate_traces_for_persons(persons, hotspots):
     try:
-        for user in users:
-            generate_route_for_user(hotspots, user)
+        for person in persons:
+            generate_route_for_person(hotspots, person)
 
     except Exception as exc:
         print(exc)
