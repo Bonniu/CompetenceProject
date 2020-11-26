@@ -26,7 +26,7 @@ def initialize_hotspots(number_of_hotspots):
         for numb, dist in enumerate(numpy.random.exponential(scale=0.1, size=2 * number_of_hotspots), start=0):
             if new_hotspots_number > number_of_hotspots - 1:
                 break
-            if dist > MIN_DISTANCE and dist < MAX_DISTANCE:
+            if MIN_DISTANCE < dist < MAX_DISTANCE:
                 angle = angles[numb]
                 new_coordination = new_coordinates(CITY_CENTRE_X, CITY_CENTRE_Y, dist, angle)
                 new_hotspots.append(Hotspot(new_coordination[0], new_coordination[1], "nazwa"))
@@ -57,7 +57,7 @@ def initialize_users(number_of_users):
         for numb, dist in enumerate(numpy.random.exponential(scale=0.1, size=2 * number_of_users), start=0):
             if new_users_number > number_of_users - 1:
                 break
-            if dist > MIN_DISTANCE and dist < MAX_DISTANCE:
+            if MIN_DISTANCE < dist < MAX_DISTANCE:
                 angle = angles[numb]
                 new_coordination = new_coordinates(CITY_CENTRE_X, CITY_CENTRE_Y, dist, angle)
                 new_users.append(Person(x=new_coordination[0], y=new_coordination[1]))

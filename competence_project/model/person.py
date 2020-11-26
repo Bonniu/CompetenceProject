@@ -18,4 +18,4 @@ class Person:
         self.y = y
 
     def __str__(self):
-        return str(self.id) + " " + str(self.phone_number) + " " + self.profile
+        return str(self.id) + " " + str(self.phone_number) + " " + str(self.profile)
