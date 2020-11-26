@@ -1,7 +1,6 @@
 import mysql.connector
 
-from db.databaseCredentials import get_database_credentials
-from db.insertData import insert_persons, insert_hotspots, insert_traces
+from database.databaseCredentials import get_database_credentials
 
 
 def init_database():
@@ -15,12 +14,7 @@ def init_database():
 
     db_cursor.execute("DROP DATABASE if exists CP_database")
     db_cursor.execute("CREATE DATABASE if not exists CP_database")
-
     create_tables(db_cursor)
-
-    insert_persons(db_cursor)
-    insert_hotspots(db_cursor)
-    insert_traces(db_cursor)
     db.commit()
     return db_cursor, db
 
@@ -30,7 +24,8 @@ def create_tables(db_cursor):
          create table if not exists CP_database.persons (
              id MEDIUMINT NOT NULL AUTO_INCREMENT,
              phone_number int NOT NULL,
-             profile ENUM('student', 'teacher', 'staff'),
+             profile varchar(99) NOT NULL,
+             interests varchar(99) NOT NULL,
              PRIMARY KEY (id))
      """)
     db_cursor.execute("""

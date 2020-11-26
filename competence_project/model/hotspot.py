@@ -8,13 +8,14 @@ weights = [2, 1, 2, 2, 2, 2, 2, 2, 2, 2]
 
 class Hotspot:
     def __init__(self, x, y, outdoor=True):
-        self.id = id(self)
+        self.id = ""
         self.x = x
         self.y = y
         self.outdoor = outdoor
         self.description = random.choices(HOTSPOT_DESCRIPTIONS, weights, k=1)[0]
-        self.name = self.description + "_" + str(datetime.now().microsecond)
+        self.name = self.description + "_" + str(id(self))
 
     def __str__(self):
-        return self.name + " " + " " + str(self.x) + " " + str(self.y) + " " + str(
-            self.outdoor) + " " + self.description
+        return "(id=" + str(self.id) + ", name=" + self.name + ", x=" + str(self.x) + ", y=" + str(
+            self.y) + ", outdoor?=" + str(
+            self.outdoor) + ", description=" + self.description + ")"
