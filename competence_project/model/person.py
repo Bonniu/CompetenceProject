@@ -8,7 +8,7 @@ INTERESTS_CHOICE_WEIGHTS = [1, 1, 2, 2, 2, 2]
 
 class Person:
     def __init__(self, x, y, phone_number=None):
-        self.id = ""
+        self.id = id(self)
         self.x = x
         self.y = y
         self.phone_number = phone_number

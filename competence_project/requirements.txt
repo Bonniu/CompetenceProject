@@ -12,3 +12,4 @@ six~=1.15.0
 protobuf~=3.14.0
 setuptools~=39.0.1
 matplotlib~=2.1.1
+pytest==6.1.2
