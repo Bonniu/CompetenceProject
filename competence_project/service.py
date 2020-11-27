@@ -1,10 +1,12 @@
 import datetime
 import random
+import traceback
 from math import radians, cos, sin, pi, sqrt, atan2
 
 # import plotly.utils
 import numpy
 
+from database.repository.TraceRepository import TraceRepository
 from model.hotspot import Hotspot
 from model.person import Person
 from model.trace import Trace
@@ -33,16 +35,11 @@ def initialize_hotspots(number_of_hotspots):
                 new_hotspots.append(Hotspot(float(new_coordination[0]), float(new_coordination[1])))
                 new_hotspots_number += 1
 
-        x = [o.x for o in new_hotspots]
-        y = [o.y for o in new_hotspots]
-
-        # TODO funkcja dodajaca do bazy danych liste obiektow
-        # db_function_to_add_hotspots_list_to_mysql(new_hotspots)
         return new_hotspots
 
-    except Exception as exc:
-        print(exc)
-        return False
+    except Exception:
+        traceback.print_exc()
+        return []
 
 
 def new_coordinates(x0, y0, d, theta):
@@ -65,14 +62,11 @@ def initialize_persons(number_of_persons):
                 new_persons.append(Person(new_coordination[0], new_coordination[1], random_phone_number))
                 new_persons_number += 1
 
-        x = [o.x for o in new_persons]
-        y = [o.y for o in new_persons]
-
         return new_persons
 
-    except Exception as exc:
-        print(exc)
-        return False
+    except Exception:
+        traceback.print_exc()
+        return []
 
 
 def choose_next_hotspot(person, hotspots, previous_location):
@@ -135,7 +129,7 @@ def return_multiplier(person, hotspot):
                     return e[1]
 
 
-def generate_route_for_person(hotspots, person):
+def generate_route_for_person(hotspots, person, db, db_cursor):
     try:
         visited_hotspots = []
         today_traces = []
@@ -173,7 +167,7 @@ def generate_route_for_person(hotspots, person):
             visited_hotspots = []
             today_traces = []
             current_date = current_date + datetime.timedelta(days=1)
-        # TODO dodac trasy do bazy
+        TraceRepository.insert_traces(db, db_cursor, all_traces_for_person)
         return True
     except Exception as exc:
         print(exc)
@@ -192,7 +186,6 @@ def generate_start_time(date):
 
 
 def distance_between_two_points(hotspot1, hotspot2):
-
     lat1 = radians(hotspot1.x)
     lon1 = radians(hotspot1.y)
     lat2 = radians(hotspot2.x)
@@ -225,10 +218,10 @@ def visiting_time():
     return visit_time
 
 
-def generate_traces_for_persons(persons, hotspots):
+def generate_traces_for_persons(persons, hotspots, db, db_cursor):
     try:
         for person in persons:
-            generate_route_for_person(hotspots, person)
+            generate_route_for_person(hotspots, person, db, db_cursor)
 
     except Exception as exc:
         print(exc)

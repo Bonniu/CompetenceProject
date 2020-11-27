@@ -10,7 +10,7 @@ def init_database():
         user=credentials[1],
         password=credentials[2]
     )
-    db_cursor = db.cursor()
+    db_cursor = db.cursor(buffered=True)
 
     db_cursor.execute("DROP DATABASE if exists CP_database")
     db_cursor.execute("CREATE DATABASE if not exists CP_database")
@@ -53,7 +53,3 @@ def create_tables(db_cursor):
              entry_time datetime,
              exit_time datetime)
      """)
-
-
-if __name__ == "__main__":
-    init_database()

@@ -1,36 +1,49 @@
-from database.CRUD.hotspotCRUD import select_all_hotspots
-from database.CRUD.personCRUD import select_all_persons
-from database.CRUD.traceCRUD import select_all_traces
 from database.initDB import init_database
 from database.repository.HotspotRepository import HotspotRepository
 from database.repository.PersonRepository import PersonRepository
-from database.repository.TraceRepository import TraceRepository
 from service import *
 from service import initialize_hotspots
 
 db_cursor, db = init_database()
-hotspots = initialize_hotspots(150)
-persons = initialize_persons(50)
-# print(persons[0])
 
+hotspots = initialize_hotspots(3)
 HotspotRepository.insert_hotspots(db, db_cursor, hotspots)
+
+persons = initialize_persons(10)
 PersonRepository.insert_persons(db, db_cursor, persons)
-TraceRepository.insert_traces(db, db_cursor, [Trace(1, 1, datetime.datetime(2020, 5, 5, 13, 30, 13), None),
-                                              Trace(1, 1, datetime.datetime(2020, 5, 5, 13, 30, 13), None)])
+########################################################################################################################
+# TODO czasami po uruchomieniu programu wywala błąd:
+#  mysql.connector.errors.IntegrityError: 1452 (23000): Cannot add or update a child row: a foreign key constraint fails
+#  dzieje sie tak jak inserty nie zdążą dodać do bazy person/insert, a potem jest próba dodania trace
+#  workaround:     wystarczy jeszcze raz odpalić program
+########################################################################################################################
+# śmietnik #############################################################################################################
 
-select_all_hotspots(db_cursor)
-select_all_persons(db_cursor)
-select_all_traces(db_cursor)
-# traceRepository.insert_trace(Trace(1, 1, 22.232, 11.22))
+# for i in HotspotRepository.select_hotspots_by_key(db_cursor, "description", "park"):
+#     print(i)
+# for i in HotspotRepository.select_all_hotspots(db_cursor):
+#     print(i)
+# print(HotspotRepository.select_hotspot_by_id(db_cursor, 12))
+#
+# for i in PersonRepository.select_persons_by_key(db_cursor, "profile", "cook"):
+#     print(i)
+# for i in PersonRepository.select_all_persons(db_cursor):
+#     print(i)
+# print(PersonRepository.select_person_by_id(db_cursor, 12))
 
-# generate_traces_for_persons(persons, hotspots)
 
+# TraceRepository.insert_traces(db, db_cursor, [Trace(1, 1, datetime.datetime(2020, 4, 5, 14, 20, 53), None),
+#                                               Trace(1, 2, datetime.datetime(2020, 5, 6, 13, 30, 13), None),
+#                                               Trace(2, 2, datetime.datetime(2021, 5, 6, 13, 30, 13),
+#                                                     datetime.datetime(2021, 5, 7, 13, 30, 13))])
+#
+# for trace in TraceRepository.select_traces_for_ids(db_cursor, None, None):
+#     print(trace)
+
+# generate_traces_for_persons(persons, hotspots, db, db_cursor)
 # plt.scatter(x1, y1, c='coral')
 # plt.scatter(x2, y2, c='lightblue')
 # plt.show()
 
-# print(Hotspot("hotspot_1", 1.232, 11.22))
-# print(Person(1, 2))
-# print(Trace("user_id", Hotspot("hotspot_1", 22.232, 11.22), 123, 123))
-
+########################################################################################################################
 db.close()
