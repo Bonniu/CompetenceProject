@@ -225,3 +225,27 @@ def generate_traces_for_persons(persons, hotspots, db, db_cursor):
 
     except Exception as exc:
         print(exc)
+
+
+def calculate_length_of_stay(db_cursor):
+    traces = TraceRepository.select_traces_for_ids(db_cursor, None, None)
+
+    # init
+    list_of_dict = []
+    for trace in traces:
+        hs_user_length_dict = {"hotspot_id": trace.hotspot_id, "user_id": trace.user_id, "length_of_stay": 0}
+        if hs_user_length_dict not in list_of_dict:
+            list_of_dict.append(hs_user_length_dict)
+
+    for trace in traces:
+        for dictionary in list_of_dict:
+            # jesli ten slownik ma hotspot_id i user_id takie jak chce to:
+            if dictionary["hotspot_id"] == trace.hotspot_id and dictionary["user_id"] == trace.user_id:
+                dictionary["length_of_stay"] += diff_dates(trace.exit_time, trace.entry_time)
+
+    return list_of_dict
+
+
+# return in minutes
+def diff_dates(date1, date2):
+    return abs(date2 - date1).total_seconds() / 60.0
