@@ -6,6 +6,7 @@ from math import radians, cos, sin, pi, sqrt, atan2
 # import plotly.utils
 import numpy
 
+from database.repository.PersonRepository import PersonRepository
 from database.repository.TraceRepository import TraceRepository
 from model.hotspot import Hotspot
 from model.person import Person
@@ -225,3 +226,24 @@ def generate_traces_for_persons(persons, hotspots, db, db_cursor):
 
     except Exception as exc:
         print(exc)
+
+
+def calculate_longest_route(db_cursor):
+    traces = TraceRepository.select_traces_for_ids(db_cursor, None, None)
+    people = PersonRepository.select_all_persons(db_cursor)
+
+    results = [t for t in traces if t.user_id == 1]
+    results.sort(key=lambda x: x.entry_time)
+    buffor = []
+    flag = False
+    for result in results:
+        if not flag:
+            buffor.append(result.hotspot_id)
+            bufforLenght = len(buffor)
+            iterator = 1
+            while iterator < bufforLenght:
+                if buffor[iterator-1] == result.hotspot_id and not flag:
+                    flag = True
+                iterator+=1
+
+    print(iterator)
