@@ -1,8 +1,6 @@
 import datetime
 import random
 import traceback
-import itertools
-import operator
 from math import radians, cos, sin, pi, sqrt, atan2
 
 # import plotly.utils
@@ -11,9 +9,11 @@ import pandas as pd
 
 from database.repository.PersonRepository import PersonRepository
 from database.repository.TraceRepository import TraceRepository
+from database.repository.RouteRepository import RouteRepository
 from model.hotspot import Hotspot
 from model.person import Person
 from model.trace import Trace
+from model.route import Route
 
 CITY_CENTRE_X = 51.759046
 CITY_CENTRE_Y = 19.458062
@@ -231,7 +231,7 @@ def generate_traces_for_persons(persons, hotspots, db, db_cursor):
         print(exc)
 
 
-def calculate_longest_route(db_cursor):
+def calculate_longest_route(db, db_cursor):
     traces = TraceRepository.select_traces_for_ids(db_cursor, None, None)
     people = PersonRepository.select_all_persons(db_cursor)
     for x in people:
@@ -243,5 +243,6 @@ def calculate_longest_route(db_cursor):
         s = s.groupby(level=0).size()
         s = s.reindex(pd.period_range(s.index.min(), s.index.max(), freq='D'))
         print('Maksymalna trasa wynosi: ', s.max())
+        RouteRepository.insert_route(db, db_cursor, Route(x.id, int(s.max())))
 
 

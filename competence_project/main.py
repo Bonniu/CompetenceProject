@@ -44,7 +44,7 @@ PersonRepository.insert_persons(db, db_cursor, persons)
 #     print(trace)
 
 generate_traces_for_persons(persons, hotspots, db, db_cursor)
-calculate_longest_route(db_cursor)
+calculate_longest_route(db, db_cursor)
 # plt.scatter(x1, y1, c='coral')
 # plt.scatter(x2, y2, c='lightblue')
 # plt.show()
