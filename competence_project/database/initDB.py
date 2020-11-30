@@ -53,3 +53,12 @@ def create_tables(db_cursor):
              entry_time datetime,
              exit_time datetime)
      """)
+    db_cursor.execute("""
+             create table if not exists CP_database.route (
+                 id MEDIUMINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                 user_id MEDIUMINT not null,
+                 FOREIGN KEY (user_id)
+                         REFERENCES persons(id)
+                         ON DELETE CASCADE,
+                 longest_route INTEGER)
+         """)

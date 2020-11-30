@@ -5,11 +5,15 @@ from math import radians, cos, sin, pi, sqrt, atan2
 
 # import plotly.utils
 import numpy
+import pandas as pd
 
+from database.repository.PersonRepository import PersonRepository
 from database.repository.TraceRepository import TraceRepository
+from database.repository.RouteRepository import RouteRepository
 from model.hotspot import Hotspot
 from model.person import Person
 from model.trace import Trace
+from model.route import Route
 
 CITY_CENTRE_X = 51.759046
 CITY_CENTRE_Y = 19.458062
@@ -92,7 +96,7 @@ def choose_next_hotspot(person, hotspots, previous_location):
             hotspots_with_chances[tup[0]] *= return_multiplier(person, tup[0])
             hotspots_with_chances[tup[0]] = int(hotspots_with_chances[tup[0]] * 100)
 
-        print(hotspots_with_chances)
+        #print(hotspots_with_chances)
         return random.choices(list(hotspots_with_chances.keys()), list(hotspots_with_chances.values()), k=1)[0]
     except Exception as exc:
         print(exc)
@@ -226,6 +230,20 @@ def generate_traces_for_persons(persons, hotspots, db, db_cursor):
     except Exception as exc:
         print(exc)
 
+
+def calculate_longest_route(db, db_cursor):
+    traces = TraceRepository.select_traces_for_ids(db_cursor, None, None)
+    people = PersonRepository.select_all_persons(db_cursor)
+    for x in people:
+        results = [t for t in traces if t.user_id == x.id]
+        results.sort(key=lambda x: x.entry_time)
+        dates = [obj.entry_time for obj in results]
+        s = pd.to_datetime(pd.Series(dates), format='%Y-%m-%d %H:%M:%S')
+        s.index = s.dt.to_period('D')
+        s = s.groupby(level=0).size()
+        s = s.reindex(pd.period_range(s.index.min(), s.index.max(), freq='D'))
+        print('Maksymalna trasa wynosi: ', s.max())
+        RouteRepository.insert_route(db, db_cursor, Route(x.id, int(s.max())))
 
 def calculate_length_of_stay(db_cursor):
     traces = TraceRepository.select_traces_for_ids(db_cursor, None, None)
