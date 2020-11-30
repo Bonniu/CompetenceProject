@@ -32,16 +32,11 @@ PersonRepository.insert_persons(db, db_cursor, persons)
 # print(PersonRepository.select_person_by_id(db_cursor, 12))
 
 
-#TraceRepository.insert_traces(db, db_cursor, [Trace(1, 2, datetime.datetime(2020, 1, 5, 14, 20, 53), datetime.datetime(2021, 2, 7, 13, 30, 13)),
- #                                             Trace(1, 3, datetime.datetime(2020, 1, 5, 13, 30, 13), datetime.datetime(2021, 4, 7, 13, 30, 13)),
-  #                                            Trace(1, 2, datetime.datetime(2020, 1, 6, 14, 30, 13), datetime.datetime(2021, 4, 7, 13, 30, 13)),
-   #                                           Trace(1, 3, datetime.datetime(2020, 1, 6, 13, 30, 13), datetime.datetime(2021, 4, 7, 13, 30, 13)),
-    #                                          Trace(1, 4, datetime.datetime(2020, 1, 7, 13, 30, 13), datetime.datetime(2021, 5, 7, 13, 30, 13)),
-     #                                         Trace(1, 5, datetime.datetime(2020, 1, 7, 13, 30, 13), datetime.datetime(2021, 4, 7, 13, 30, 13)),
-      #                                        Trace(1, 2, datetime.datetime(2020, 1, 7, 13, 30, 13), datetime.datetime(2021, 4, 7, 13, 30, 13))])
-#
-# for trace in TraceRepository.select_traces_for_ids(db_cursor, None, None):
-#     print(trace)
+TraceRepository.insert_traces(db, db_cursor, [Trace(1, 1, datetime.datetime(2020, 4, 5, 14, 20, 53), datetime.datetime(2020, 4, 5, 15, 20, 53)),
+                                              Trace(1, 2, datetime.datetime(2020, 5, 6, 13, 30, 13), datetime.datetime(2020, 5, 6, 14, 30, 13)),
+                                              Trace(2, 2, datetime.datetime(2021, 5, 6, 13, 30, 13),
+                                                    datetime.datetime(2021, 5, 7, 13, 30, 13))])
+
 
 generate_traces_for_persons(persons, hotspots, db, db_cursor)
 calculate_longest_route(db, db_cursor)
@@ -49,5 +44,9 @@ calculate_longest_route(db, db_cursor)
 # plt.scatter(x2, y2, c='lightblue')
 # plt.show()
 
+# for dict1 in calculate_length_of_stay(db_cursor):
+#     print(dict1)
+
 ########################################################################################################################
 db.close()
+
