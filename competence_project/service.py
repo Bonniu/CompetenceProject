@@ -1,10 +1,13 @@
 import datetime
 import random
 import traceback
+import itertools
+import operator
 from math import radians, cos, sin, pi, sqrt, atan2
 
 # import plotly.utils
 import numpy
+import pandas as pd
 
 from database.repository.PersonRepository import PersonRepository
 from database.repository.TraceRepository import TraceRepository
@@ -93,7 +96,7 @@ def choose_next_hotspot(person, hotspots, previous_location):
             hotspots_with_chances[tup[0]] *= return_multiplier(person, tup[0])
             hotspots_with_chances[tup[0]] = int(hotspots_with_chances[tup[0]] * 100)
 
-        print(hotspots_with_chances)
+        #print(hotspots_with_chances)
         return random.choices(list(hotspots_with_chances.keys()), list(hotspots_with_chances.values()), k=1)[0]
     except Exception as exc:
         print(exc)
@@ -231,19 +234,14 @@ def generate_traces_for_persons(persons, hotspots, db, db_cursor):
 def calculate_longest_route(db_cursor):
     traces = TraceRepository.select_traces_for_ids(db_cursor, None, None)
     people = PersonRepository.select_all_persons(db_cursor)
+    for x in people:
+        results = [t for t in traces if t.user_id == x.id]
+        results.sort(key=lambda x: x.entry_time)
+        dates = [obj.entry_time for obj in results]
+        s = pd.to_datetime(pd.Series(dates), format='%Y-%m-%d %H:%M:%S')
+        s.index = s.dt.to_period('D')
+        s = s.groupby(level=0).size()
+        s = s.reindex(pd.period_range(s.index.min(), s.index.max(), freq='D'))
+        print('Maksymalna trasa wynosi: ', s.max())
 
-    results = [t for t in traces if t.user_id == 1]
-    results.sort(key=lambda x: x.entry_time)
-    buffor = []
-    flag = False
-    for result in results:
-        if not flag:
-            buffor.append(result.hotspot_id)
-            bufforLenght = len(buffor)
-            iterator = 1
-            while iterator < bufforLenght:
-                if buffor[iterator-1] == result.hotspot_id and not flag:
-                    flag = True
-                iterator+=1
 
-    print(iterator)
