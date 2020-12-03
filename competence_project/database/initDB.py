@@ -3,7 +3,7 @@ import mysql.connector
 from database.databaseCredentials import get_database_credentials
 
 
-def init_database():
+def connect_to_mysql():
     credentials = get_database_credentials()
     db = mysql.connector.connect(
         host=credentials[0],
@@ -11,12 +11,14 @@ def init_database():
         password=credentials[2]
     )
     db_cursor = db.cursor(buffered=True)
+    return db_cursor, db
 
+
+def reset_database(db_cursor, db):
     db_cursor.execute("DROP DATABASE if exists CP_database")
     db_cursor.execute("CREATE DATABASE if not exists CP_database")
     create_tables(db_cursor)
     db.commit()
-    return db_cursor, db
 
 
 def create_tables(db_cursor):
