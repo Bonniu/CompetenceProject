@@ -2,14 +2,10 @@ import pytest
 import random
 import datetime
 
-from model.person import Person
-from model.hotspot import Hotspot
+from model.person import Person, USER_PROFILES, USER_INTERESTS
+from model.hotspot import Hotspot, HOTSPOT_DESCRIPTIONS
 from model.trace import Trace
 
-USER_INTERESTS = ["football", "cinemagoer", "sport", "bowling", "shopping", "books"]
-USER_PROFILES = ["student", "cook", "seller", "athlete", "retired"]
-HOTSPOT_DESCRIPTIONS = ["cafe", "bowlingPlace", "restaurant", "shop", "park", "library", "parking", "university",
-                        "stadium", "cinema"]
 repeat_test_amount = 100
 
 

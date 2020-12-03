@@ -38,6 +38,12 @@ def initialize_hotspots(number_of_hotspots):
                 new_coordination = new_coordinates(CITY_CENTRE_X, CITY_CENTRE_Y, dist, angle)
                 new_hotspots.append(Hotspot(float(new_coordination[0]), float(new_coordination[1])))
                 new_hotspots_number += 1
+            else:
+                dist = random.uniform(MIN_DISTANCE, MAX_DISTANCE)
+                angle = angles[numb]
+                new_coordination = new_coordinates(CITY_CENTRE_X, CITY_CENTRE_Y, dist, angle)
+                new_hotspots.append(Hotspot(float(new_coordination[0]), float(new_coordination[1])))
+                new_hotspots_number += 1
 
         return new_hotspots
 
@@ -60,6 +66,13 @@ def initialize_persons(number_of_persons):
             if new_persons_number > number_of_persons - 1:
                 break
             if MIN_DISTANCE < dist < MAX_DISTANCE:
+                angle = angles[numb]
+                new_coordination = new_coordinates(CITY_CENTRE_X, CITY_CENTRE_Y, dist, angle)
+                random_phone_number = random.randint(100000000, 999999999)
+                new_persons.append(Person(new_coordination[0], new_coordination[1], random_phone_number))
+                new_persons_number += 1
+            else:
+                dist = random.uniform(MIN_DISTANCE, MAX_DISTANCE)
                 angle = angles[numb]
                 new_coordination = new_coordinates(CITY_CENTRE_X, CITY_CENTRE_Y, dist, angle)
                 random_phone_number = random.randint(100000000, 999999999)
@@ -244,6 +257,7 @@ def calculate_longest_route(db, db_cursor):
         s = s.reindex(pd.period_range(s.index.min(), s.index.max(), freq='D'))
         print('Maksymalna trasa wynosi: ', s.max())
         RouteRepository.insert_route(db, db_cursor, Route(x.id, int(s.max())))
+
 
 def calculate_length_of_stay(db_cursor):
     traces = TraceRepository.select_traces_for_ids(db_cursor, None, None)
