@@ -281,3 +281,4 @@ def calculate_length_of_stay(db_cursor):
 # return in minutes
 def diff_dates(date1, date2):
     return abs(date2 - date1).total_seconds() / 60.0
+

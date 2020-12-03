@@ -1,5 +1,6 @@
 import time
 
+from database.dbImport import DbImport
 from database.initDB import connect_to_mysql, reset_database
 from database.repository.HotspotRepository import HotspotRepository
 from service import *
@@ -15,6 +16,13 @@ def generate_data(nr_of_hotspots=200, nr_of_persons=100):
     generate_traces_for_persons(persons, hotspots, db, db_cursor)
     after = time.time()
     print("Data generated in " + str(after - before) + "s.")
+
+
+def load_data_from_files_to_db():
+    reset_database(db_cursor, db)  # drop and create database
+    DbImport.read_persons(db, db_cursor)
+    DbImport.read_hotspots(db, db_cursor)
+    DbImport.read_traces(db, db_cursor)
 
 
 ########################################################################################################################
@@ -63,6 +71,7 @@ def generate_data(nr_of_hotspots=200, nr_of_persons=100):
 
 if __name__ == "__main__":
     db_cursor, db = connect_to_mysql()
-    generate_data(20, 1)  # czysci baze i generuje od nowa
+    # generate_data(20, 1)  # czysci baze i generuje od nowa
     # import_data_from_files()
+    load_data_from_files_to_db()
     db.close()
