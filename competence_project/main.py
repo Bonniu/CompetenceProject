@@ -70,8 +70,16 @@ def load_data_from_files_to_db():
 
 
 if __name__ == "__main__":
-    db_cursor, db = connect_to_mysql()
-    # generate_data(20, 1)  # czysci baze i generuje od nowa
-    # import_data_from_files()
-    load_data_from_files_to_db()
-    db.close()
+    flag = False
+    answer = input("Whether to use data from file? (y/n):")
+    
+    if answer == "y" or answer == "Y":
+        db_cursor, db = connect_to_mysql()
+        load_data_from_files_to_db()
+        db.close()
+    elif answer == "n" or answer == "N":
+        db_cursor, db = connect_to_mysql()
+        hotspots = input("Number of hotspots: ")
+        people = input("Number of people: ")
+        generate_data(int(hotspots), int(people))
+        db.close()
