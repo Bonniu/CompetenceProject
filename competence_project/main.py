@@ -71,8 +71,13 @@ def load_data_from_files_to_db():
 
 if __name__ == "__main__":
     flag = False
-    answer = input("Whether to use data from file? (y/n):")
-    
+    answer = None
+    while not flag:
+        if answer == 'y' or answer == 'Y' or answer == 'n' or answer == 'N':
+            flag = True
+        else:
+            answer = input("Whether to use data from file? (y/n):")
+
     if answer == "y" or answer == "Y":
         db_cursor, db = connect_to_mysql()
         load_data_from_files_to_db()
