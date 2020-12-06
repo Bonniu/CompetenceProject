@@ -6,12 +6,12 @@ from database.repository.HotspotRepository import HotspotRepository
 from service import *
 
 
-def generate_data(nr_of_hotspots=200, nr_of_persons=100):
+def generate_data(nr_of_hotspots=200, nr_of_persons=100, CITY_CENTRE_X= 51.759046, CITY_CENTRE_Y = 19.458062, MIN_DISTANCE = 0.0005, MAX_DISTANCE = 0.08):
     before = time.time()
     reset_database(db_cursor, db)  # drop and create database
-    hotspots = initialize_hotspots(nr_of_hotspots)
+    hotspots = initialize_hotspots(nr_of_hotspots, CITY_CENTRE_X, CITY_CENTRE_Y, MIN_DISTANCE, MAX_DISTANCE)
     HotspotRepository.insert_hotspots(db, db_cursor, hotspots)
-    persons = initialize_persons(nr_of_persons)
+    persons = initialize_persons(nr_of_persons, CITY_CENTRE_X, CITY_CENTRE_Y, MIN_DISTANCE, MAX_DISTANCE)
     PersonRepository.insert_persons(db, db_cursor, persons)
     generate_traces_for_persons(persons, hotspots, db, db_cursor)
     after = time.time()
@@ -71,20 +71,42 @@ def load_data_from_files_to_db():
 
 if __name__ == "__main__":
     flag = False
-    answer = None
+    answerFile = None
     while not flag:
-        if answer == 'y' or answer == 'Y' or answer == 'n' or answer == 'N':
+        if answerFile == 'y' or answerFile == 'Y' or answerFile == 'n' or answerFile == 'N':
             flag = True
         else:
-            answer = input("Whether to use data from file? (y/n):")
+            answerFile = input("Whether to use data from file? (y/n):")
 
-    if answer == "y" or answer == "Y":
+    if answerFile == "n" or answerFile == "n":
+        answerParam = None
+        flag = False
+        while not flag:
+            if answerParam == 'y' or answerParam == 'Y' or answerParam == 'n' or answerParam == 'N':
+                flag = True
+            else:
+                answerParam = input("Whether to use default parameters? (y/n):")
+
+    if answerFile == "y" or answerFile == "Y":
         db_cursor, db = connect_to_mysql()
         load_data_from_files_to_db()
         db.close()
-    elif answer == "n" or answer == "N":
-        db_cursor, db = connect_to_mysql()
-        hotspots = input("Number of hotspots: ")
-        people = input("Number of people: ")
-        generate_data(int(hotspots), int(people))
-        db.close()
+    elif answerFile == "n" or answerFile == "N":
+        if answerParam == "y" or answerParam == "Y":
+            db_cursor, db = connect_to_mysql()
+            hotspots = input("Number of hotspots: ")
+            people = input("Number of people: ")
+            generate_data(int(hotspots), int(people), 51.759046, 19.458062, 0.0005, 0.08)
+            db.close()
+        elif answerParam == "n" or answerParam == "N":
+            hotspots = input("Number of hotspots: ")
+            people = input("Number of people: ")
+            centerX = input("Coordinates of the center X:")
+            centerY = input("Coordinates of the center Y:")
+            minDist = input("Minimal distance between hotspots:")
+            maxDist = input("Maximal distance between hotspots:")
+            db_cursor, db = connect_to_mysql()
+            generate_data(int(hotspots), int(people), float(centerX), float(centerY), float(minDist), float(maxDist))
+            db.close()
+
+
