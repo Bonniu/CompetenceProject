@@ -90,14 +90,12 @@ if __name__ == "__main__":
     if answerFile == "y" or answerFile == "Y":
         db_cursor, db = connect_to_mysql()
         load_data_from_files_to_db()
-        db.close()
     elif answerFile == "n" or answerFile == "N":
         if answerParam == "y" or answerParam == "Y":
             db_cursor, db = connect_to_mysql()
             hotspots = input("Number of hotspots: ")
             people = input("Number of people: ")
             generate_data(int(hotspots), int(people), 51.759046, 19.458062, 0.0005, 0.08)
-            db.close()
         elif answerParam == "n" or answerParam == "N":
             hotspots = input("Number of hotspots: ")
             people = input("Number of people: ")
@@ -107,6 +105,7 @@ if __name__ == "__main__":
             maxDist = input("Maximal distance between hotspots:")
             db_cursor, db = connect_to_mysql()
             generate_data(int(hotspots), int(people), float(centerX), float(centerY), float(minDist), float(maxDist))
-            db.close()
+
+    db.close()
 
 
