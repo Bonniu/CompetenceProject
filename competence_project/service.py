@@ -15,17 +15,13 @@ from model.person import Person
 from model.trace import Trace
 from model.route import Route
 
-CITY_CENTRE_X = 51.759046
-CITY_CENTRE_Y = 19.458062
-MIN_DISTANCE = 0.0005
-MAX_DISTANCE = 0.08
 R = 6373.0
 
 START_DATE = datetime.datetime.strptime('2020-10-20', '%Y-%m-%d')
 END_DATE = datetime.datetime.strptime('2020-12-20', '%Y-%m-%d')
 
 
-def initialize_hotspots(number_of_hotspots):
+def initialize_hotspots(number_of_hotspots, CITY_CENTRE_X, CITY_CENTRE_Y, MIN_DISTANCE, MAX_DISTANCE):
     try:
         new_hotspots = []
         angles = numpy.random.uniform(low=0.0, high=360.0, size=2 * number_of_hotspots)
@@ -57,7 +53,7 @@ def new_coordinates(x0, y0, d, theta):
     return x0 + d * cos(theta_rad), y0 + d * sin(theta_rad)
 
 
-def initialize_persons(number_of_persons):
+def initialize_persons(number_of_persons, CITY_CENTRE_X, CITY_CENTRE_Y, MIN_DISTANCE, MAX_DISTANCE):
     try:
         new_persons = []
         angles = numpy.random.uniform(low=0.0, high=360.0, size=2 * number_of_persons)
