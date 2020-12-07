@@ -6,7 +6,8 @@ from database.repository.HotspotRepository import HotspotRepository
 from service import *
 
 
-def generate_data(nr_of_hotspots=200, nr_of_persons=100, CITY_CENTRE_X= 51.759046, CITY_CENTRE_Y = 19.458062, MIN_DISTANCE = 0.0005, MAX_DISTANCE = 0.08):
+def generate_data(nr_of_hotspots=200, nr_of_persons=100, CITY_CENTRE_X=51.759046,
+                  CITY_CENTRE_Y=19.458062, MIN_DISTANCE=0.0005, MAX_DISTANCE=0.08):
     before = time.time()
     reset_database(db_cursor, db)  # drop and create database
     hotspots = initialize_hotspots(nr_of_hotspots, CITY_CENTRE_X, CITY_CENTRE_Y, MIN_DISTANCE, MAX_DISTANCE)
@@ -18,11 +19,13 @@ def generate_data(nr_of_hotspots=200, nr_of_persons=100, CITY_CENTRE_X= 51.75904
     print("Data generated in " + str(after - before) + "s.")
 
 
-def load_data_from_files_to_db():
+def load_data_from_files_to_db(size_of_data_: str = "small"):
+    print("Importing data...")
     reset_database(db_cursor, db)  # drop and create database
-    DbImport.read_persons(db, db_cursor)
-    DbImport.read_hotspots(db, db_cursor)
-    DbImport.read_traces(db, db_cursor)
+    DbImport.read_persons(db, db_cursor, size_of_data_)
+    DbImport.read_hotspots(db, db_cursor, size_of_data_)
+    DbImport.read_traces(db, db_cursor, size_of_data_)
+    print("Importing data done.")
 
 
 ########################################################################################################################
@@ -68,8 +71,20 @@ def load_data_from_files_to_db():
 
 ########################################################################################################################
 
+def get_size_of_data_from_user():
+    size_flag = None
+    dict_ = {"s": "small", "m": "medium", "l": "large"}
+    size_input = ""
+    while not size_flag:
+        if dict_.keys().__contains__(size_input):
+            size_flag = True
+        else:
+            size_input = input("Size of data to import (s/m/l): ")
+    return dict_[size_input]
+
 
 if __name__ == "__main__":
+    db_cursor, db = connect_to_mysql()
     flag = False
     answerFile = None
     while not flag:
@@ -78,8 +93,10 @@ if __name__ == "__main__":
         else:
             answerFile = input("Whether to use data from file? (y/n):")
 
+    size_of_data_input = None
+
     if answerFile == "n" or answerFile == "n":
-        answerParam = None
+        answerParam = ""
         flag = False
         while not flag:
             if answerParam == 'y' or answerParam == 'Y' or answerParam == 'n' or answerParam == 'N':
@@ -88,24 +105,20 @@ if __name__ == "__main__":
                 answerParam = input("Whether to use default parameters? (y/n):")
 
     if answerFile == "y" or answerFile == "Y":
-        db_cursor, db = connect_to_mysql()
-        load_data_from_files_to_db()
+        size_of_data = get_size_of_data_from_user()
+        load_data_from_files_to_db(size_of_data)
     elif answerFile == "n" or answerFile == "N":
         if answerParam == "y" or answerParam == "Y":
-            db_cursor, db = connect_to_mysql()
-            hotspots = input("Number of hotspots: ")
+            hotspots_ = input("Number of hotspots: ")
             people = input("Number of people: ")
-            generate_data(int(hotspots), int(people), 51.759046, 19.458062, 0.0005, 0.08)
+            generate_data(int(hotspots_), int(people), 51.759046, 19.458062, 0.0005, 0.08)
         elif answerParam == "n" or answerParam == "N":
-            hotspots = input("Number of hotspots: ")
+            hotspots_ = input("Number of hotspots: ")
             people = input("Number of people: ")
             centerX = input("Coordinates of the center X:")
             centerY = input("Coordinates of the center Y:")
             minDist = input("Minimal distance between hotspots:")
             maxDist = input("Maximal distance between hotspots:")
-            db_cursor, db = connect_to_mysql()
-            generate_data(int(hotspots), int(people), float(centerX), float(centerY), float(minDist), float(maxDist))
+            generate_data(int(hotspots_), int(people), float(centerX), float(centerY), float(minDist), float(maxDist))
 
     db.close()
-
-

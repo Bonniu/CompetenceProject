@@ -3,16 +3,17 @@ import csv
 from database.repository.HotspotRepository import HotspotRepository
 from database.repository.PersonRepository import PersonRepository
 from database.repository.TraceRepository import TraceRepository
-from model.hotspot import Hotspot
+
+prefix = "database/data_csv/"
 
 
 class DbImport:
 
     @staticmethod
-    def read_hotspots(db, db_cursor):
+    def read_hotspots(db, db_cursor, size_of_data: str):
         hotspot_list = []
         # Read CSV file
-        with open("database/data_csv/small/hotspots.csv") as fp:
+        with open(prefix + size_of_data + "/hotspots.csv") as fp:
             reader = csv.reader(fp, delimiter=",", quotechar='"')
             next(reader, None)  # skip the headers
             data_read = [row for row in reader]
@@ -23,10 +24,10 @@ class DbImport:
         HotspotRepository.insert_hotspots(db, db_cursor, hotspot_list)
 
     @staticmethod
-    def read_persons(db, db_cursor):
+    def read_persons(db, db_cursor, size_of_data: str):
         person_list = []
         # Read CSV file
-        with open("database/data_csv/small/persons.csv") as fp:
+        with open(prefix + size_of_data + "/persons.csv") as fp:
             reader = csv.reader(fp, delimiter=",", quotechar='"')
             next(reader, None)  # skip the headers
             data_read = [row for row in reader]
@@ -37,10 +38,10 @@ class DbImport:
         PersonRepository.insert_persons(db, db_cursor, person_list)
 
     @staticmethod
-    def read_traces(db, db_cursor):
+    def read_traces(db, db_cursor, size_of_data: str):
         trace_list = []
         # Read CSV file
-        with open("database/data_csv/small/traces.csv") as fp:
+        with open(prefix + size_of_data + "/traces.csv") as fp:
             reader = csv.reader(fp, delimiter=",", quotechar='"')
             next(reader, None)  # skip the headers
             data_read = [row for row in reader]
