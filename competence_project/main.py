@@ -5,6 +5,7 @@ from database.initDB import connect_to_mysql, reset_database
 from database.repository.HotspotRepository import HotspotRepository
 from service import *
 
+import analyzer
 
 def generate_data(nr_of_hotspots=200, nr_of_persons=100, CITY_CENTRE_X=51.759046,
                   CITY_CENTRE_Y=19.458062, MIN_DISTANCE=0.0005, MAX_DISTANCE=0.08):
@@ -82,9 +83,19 @@ def get_size_of_data_from_user():
             size_input = input("Size of data to import (s/m/l): ")
     return dict_[size_input]
 
-
 if __name__ == "__main__":
+
     db_cursor, db = connect_to_mysql()
+    analyze_mode = ''
+    while not (analyze_mode and analyze_mode.lower() in ['y', 'n']):
+        analyze_mode = input('Want to analyze? (y/n)')
+        if analyze_mode.lower() == 'y':
+            analyzer.analyze(
+                HotspotRepository.select_all_hotspots(db_cursor)
+                ,PersonRepository.select_all_persons(db_cursor)
+                ,TraceRepository.select_all_traces(db_cursor)
+            )
+    
     flag = False
     answerFile = None
     while not flag:

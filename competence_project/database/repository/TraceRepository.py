@@ -33,6 +33,14 @@ class TraceRepository:
         return traces
 
     @staticmethod
+    def select_all_traces(db_cursor) -> []:
+        db_cursor.execute("SELECT * FROM CP_database.traces")
+        traces = []
+        for res in db_cursor.fetchall():
+            traces.append(TraceRepository.get_trace_from_result(res))
+        return traces
+
+    @staticmethod
     def get_trace_from_result(result) -> Trace:
         # 0id 1user_id 2hotspot_id 3entry_time 4exit_time
         trace = Trace(result[1], result[2], result[3], result[4])
