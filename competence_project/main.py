@@ -94,6 +94,7 @@ if __name__ == "__main__":
                 HotspotRepository.select_all_hotspots(db_cursor)
                 ,PersonRepository.select_all_persons(db_cursor)
                 ,TraceRepository.select_all_traces(db_cursor)
+                ,db_cursor
             )
     
     flag = False
