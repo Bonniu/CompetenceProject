@@ -8,6 +8,7 @@ from service import *
 
 def generate_data(nr_of_hotspots=200, nr_of_persons=100, CITY_CENTRE_X=51.759046,
                   CITY_CENTRE_Y=19.458062, MIN_DISTANCE=0.0005, MAX_DISTANCE=0.08):
+    print("Generating new data...")
     before = time.time()
     reset_database(db_cursor, db)  # drop and create database
     hotspots = initialize_hotspots(nr_of_hotspots, CITY_CENTRE_X, CITY_CENTRE_Y, MIN_DISTANCE, MAX_DISTANCE)
@@ -20,12 +21,14 @@ def generate_data(nr_of_hotspots=200, nr_of_persons=100, CITY_CENTRE_X=51.759046
 
 
 def load_data_from_files_to_db(size_of_data_: str = "small"):
-    print("Importing data...")
+    print("Importing data from database...")
+    before = time.time()
     reset_database(db_cursor, db)  # drop and create database
     DbImport.read_persons(db, db_cursor, size_of_data_)
     DbImport.read_hotspots(db, db_cursor, size_of_data_)
     DbImport.read_traces(db, db_cursor, size_of_data_)
-    print("Importing data done.")
+    after = time.time()
+    print("Importing data done in " + str(after - before) + "s .")
 
 
 ########################################################################################################################

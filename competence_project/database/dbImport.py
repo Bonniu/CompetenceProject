@@ -4,7 +4,7 @@ from database.repository.HotspotRepository import HotspotRepository
 from database.repository.PersonRepository import PersonRepository
 from database.repository.TraceRepository import TraceRepository
 
-prefix = "database/data_csv/"
+prefix = "../data_csv/"
 
 
 class DbImport:
@@ -50,3 +50,10 @@ class DbImport:
                 trace_list.append(obj1)
 
         TraceRepository.insert_traces(db, db_cursor, trace_list)
+
+    @staticmethod
+    def read_traces2(db, db_cursor, size_of_data: str):
+        # Read CSV file
+        with open(prefix + size_of_data + "/traces.sql") as sql_file:
+            sql = sql_file.read()
+            db_cursor.execute(sql)
