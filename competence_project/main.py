@@ -43,7 +43,9 @@ def load_data_from_files_to_db(size_of_data_: str = "small"):
 # h1000 p200 = 81086 -> 4MB
 # h300  p50 = 20319 ->  1MB
 # h100 p20 = 7967 -> 0.4MB
-
+#                              s     0.1MB -> 20h 5p
+#                              m     1.08MB -> 200h 50p
+#    1554.2446775436401s       l     11.5MB -> 2000h 500p
 #
 # for i in HotspotRepository.select_hotspots_by_key(db_cursor, "description", "park"):
 #     print(i)
