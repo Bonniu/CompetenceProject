@@ -8,16 +8,17 @@
 
 ### How to use our program
 1. Start MySQL server (login: root, password: admin)
-2. Open competence_project in PyCharm.
-3. Press "Run" button.
-4. And follow instructions (should appear in console).
-5. Enjoy:)
+2. Install required libraries (listed in file competence_project/requirements.txt)
+3. Open competence_project in PyCharm.
+4. Press "Run" button (or run file _main.py_)
+5. Follow instructions (should appear in console).
+
 
 ### Information about data sets
 **User has 3 sets to choose**
-- small _(0.1MB, 20 hotspots, 5 person, 1883 traces)_
-- medium _(1MB, 200 hotspots, 50 person, 20 088 traces)_
-- large _(11.5MB, 2000 hotspots, 500 person, 202 817 traces)_
+- small _(1MB, 200 hotspots, 50 person, 20 088 traces)_
+- medium _(11.5MB, 2000 hotspots, 500 person, 202 817 traces)_
+- large _(131MB, 50 hotspots, 5990 person, 2 330 850 traces)_
 
 **People profiles**
 
