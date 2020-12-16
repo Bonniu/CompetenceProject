@@ -20,6 +20,10 @@
 - medium _(11.5MB, 2000 hotspots, 500 person, 202 817 traces)_
 - large _(131MB, 50 hotspots, 5990 person, 2 330 850 traces)_
 
+To get those data, you must download data from this link and put it in folder _data_csv_:
+```` 
+https://tulodz-my.sharepoint.com/:f:/g/personal/216769_edu_p_lodz_pl/Ek6dPm9a4zxGvPE12UbFvIMBrDHe0BindCV0idGl2TJbDQ?e=xQw3xJ
+````
 **People profiles**
 
 student, cook, seller, athlete, retired
