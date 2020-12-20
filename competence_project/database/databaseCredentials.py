@@ -1,5 +1,5 @@
 def get_database_credentials():
     host = "localhost"
-    user = "root"
-    password = "admin"
+    user = "Brtex"
+    password = "password"
     return host, user, password
