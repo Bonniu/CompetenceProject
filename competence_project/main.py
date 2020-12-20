@@ -7,6 +7,12 @@ from service import *
 
 import analyzer
 
+from sqlalchemy import create_engine
+
+import pymysql
+
+import pandas as pd
+
 def generate_data(nr_of_hotspots=200, nr_of_persons=100, CITY_CENTRE_X=51.759046,
                   CITY_CENTRE_Y=19.458062, MIN_DISTANCE=0.0005, MAX_DISTANCE=0.08):
     print("Generating new data...")
@@ -90,6 +96,10 @@ def get_size_of_data_from_user():
 
 if __name__ == "__main__":
 
+    #sqlEngine = create_engine('mysql+pymysql://root:@127.0.0.1', pool_recycle=3600)
+
+    #dbConnection = sqlEngine.connect()
+
     db_cursor, db = connect_to_mysql()
     analyze_mode = ''
     while not (analyze_mode and analyze_mode.lower() in ['y', 'n']):
@@ -101,6 +111,8 @@ if __name__ == "__main__":
                 ,TraceRepository.select_all_traces(db_cursor)
                 ,db_cursor
             )
+            calculate_longest_route(db, db_cursor)
+            print(calculate_length_of_stay(db_cursor))
     
     flag = False
     answerFile = None
@@ -137,5 +149,8 @@ if __name__ == "__main__":
             minDist = input("Minimal distance between hotspots:")
             maxDist = input("Maximal distance between hotspots:")
             generate_data(int(hotspots_), int(people), float(centerX), float(centerY), float(minDist), float(maxDist))
+
+    calculate_longest_route(db, db_cursor)
+    calculate_length_of_stay(db_cursor)
 
     db.close()
