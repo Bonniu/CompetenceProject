@@ -3,7 +3,7 @@ from datetime import datetime
 
 HOTSPOT_DESCRIPTIONS = ["cafe", "bowlingPlace", "restaurant", "shop", "park", "library", "parking", "university",
                         "stadium", "cinema"]
-weights = [2, 1, 2, 2, 2, 2, 2, 2, 2, 2]
+weights = [3, 1, 3, 4, 1, 1, 2, 1, 1, 2]
 
 
 class Hotspot:
