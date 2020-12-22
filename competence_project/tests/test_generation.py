@@ -2,7 +2,6 @@ from math import sin, cos, sqrt, atan2, radians
 
 from service import initialize_hotspots, new_coordinates, initialize_persons, generate_route_for_person
 from tests.test_initialization import HOTSPOT_DESCRIPTIONS, USER_PROFILES, USER_INTERESTS
-from main import init_database
 
 CITY_CENTRE_X = 51.759046
 CITY_CENTRE_Y = 19.458062
@@ -55,7 +54,8 @@ def get_min_max_distance():
 def test_generation_of_hotspots():
     min_distance, max_distance = get_min_max_distance()
     for i in range(50):
-        hotspots = initialize_hotspots(100)
+        hotspots = initialize_hotspots(100, CITY_CENTRE_X=51.759046, CITY_CENTRE_Y=19.458062,
+                                       MIN_DISTANCE=0.0005, MAX_DISTANCE=0.08)
         assert hotspots.__len__() == 100
 
         hotspots_ids = []
@@ -72,7 +72,8 @@ def test_generation_of_hotspots():
 def test_generation_of_persons():
     min_distance, max_distance = get_min_max_distance()
     for i in range(50):
-        people = initialize_persons(100)
+        people = initialize_persons(100, CITY_CENTRE_X=51.759046, CITY_CENTRE_Y=19.458062,
+                                       MIN_DISTANCE=0.0005, MAX_DISTANCE=0.08)
         assert people.__len__() == 100
 
         people_ids = []
@@ -83,11 +84,3 @@ def test_generation_of_persons():
             assert p.interests in USER_INTERESTS
 
         assert len(people_ids) == len(set(people))
-
-
-def test_generation_of_route_for_person():
-    db_cursor, db = init_database()
-    hotspots = initialize_hotspots(50)
-    people = initialize_persons(10)
-    for i in range(people.__len__()):
-        assert generate_route_for_person(hotspots, people[i], db, db_cursor) is None or True
