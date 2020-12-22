@@ -14,9 +14,6 @@ def analyze(hotspots, persons, traces,db_cursor):
         ranking_list.append(sublist)
     new_df = pd.DataFrame(columns=['hotspot_id', 'cnt'], data=ranking_list)
     display(new_df)
-   # print("Ranking: " + ranking)
-    clustered = cluster_hotspots(db_cursor)
- #   print("Clustered: " + clustered)
     paired = pair_hotspots(db_cursor)
     paired_list = []
     for e in paired:
@@ -26,10 +23,8 @@ def analyze(hotspots, persons, traces,db_cursor):
         sublist.append(e.cnt)
         paired_list.append(sublist)
     new_df = pd.DataFrame(columns=['first_hotspot_name', 'second_hotspot_name', 'cnt'], data=paired_list)
+    pd.set_option('display.max_rows', new_df.shape[0] + 1)
     display(new_df)
-    # print("Tutaj: ")
-    # print(paired[0])
-    # print("Paired: " + paired)
     i=0
 
 

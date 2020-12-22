@@ -10,6 +10,7 @@ import pandas as pd
 from database.repository.PersonRepository import PersonRepository
 from database.repository.TraceRepository import TraceRepository
 from database.repository.RouteRepository import RouteRepository
+from database.repository.HotspotRepository import HotspotRepository
 from model.hotspot import Hotspot
 from model.person import Person
 from model.trace import Trace
@@ -243,6 +244,7 @@ def generate_traces_for_persons(persons, hotspots, db, db_cursor):
 def calculate_longest_route(db, db_cursor):
     traces = TraceRepository.select_traces_for_ids(db_cursor, None, None)
     people = PersonRepository.select_all_persons(db_cursor)
+    print("Maksymalna trasa: ")
     for x in people:
         results = [t for t in traces if t.user_id == x.id]
         results.sort(key=lambda x: x.entry_time)
@@ -251,7 +253,7 @@ def calculate_longest_route(db, db_cursor):
         s.index = s.dt.to_period('D')
         s = s.groupby(level=0).size()
         s = s.reindex(pd.period_range(s.index.min(), s.index.max(), freq='D'))
-        print('Maksymalna trasa wynosi: ', s.max())
+        print(x.id, "   ", s.max())
         RouteRepository.insert_route(db, db_cursor, Route(x.id, int(s.max())))
 
 
@@ -261,14 +263,14 @@ def calculate_length_of_stay(db_cursor):
     # init
     list_of_dict = []
     for trace in traces:
-        hs_user_length_dict = {"hotspot_id": trace.hotspot_id, "user_id": trace.user_id, "length_of_stay": 0}
+        hs_user_length_dict = {"user_id": trace.user_id, "hotspot_id": HotspotRepository.select_hotspot_by_id(db_cursor, trace.hotspot_id).description + str(trace.hotspot_id), "length_of_stay": 0}
         if hs_user_length_dict not in list_of_dict:
             list_of_dict.append(hs_user_length_dict)
 
     for trace in traces:
         for dictionary in list_of_dict:
             # jesli ten slownik ma hotspot_id i user_id takie jak chce to:
-            if dictionary["hotspot_id"] == trace.hotspot_id and dictionary["user_id"] == trace.user_id:
+            if dictionary["hotspot_id"] == HotspotRepository.select_hotspot_by_id(db_cursor, trace.hotspot_id).description + str(trace.hotspot_id) and dictionary["user_id"] == trace.user_id:
                 dictionary["length_of_stay"] += diff_dates(trace.exit_time, trace.entry_time)
 
     return list_of_dict

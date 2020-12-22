@@ -17,6 +17,11 @@ class TraceRepository:
             TraceRepository.insert_trace(db, db_cursor, trace)
 
     @staticmethod
+    def select_traces_by_id(db_cursor, id_) -> Trace:
+        db_cursor.execute("SELECT * FROM CP_database.traces WHERE id=%s" % id_)
+        return TraceRepository.get_trace_from_result(db_cursor.fetchall()[0])
+
+    @staticmethod
     def select_traces_for_ids(db_cursor, user_id, hotspot_id) -> []:
         query = "SELECT * FROM CP_database.traces"
         if hotspot_id is not None:
